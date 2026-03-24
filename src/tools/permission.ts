@@ -21,9 +21,14 @@ export function registerPermissionRelay(
     const { request_id, tool_name, description, input_preview } = request.params;
 
     const message = `🔐 **Permission Request / 권한 요청**
-**Tool / 도구:** ${tool_name}
+
+**Tool / 도구:** \`${tool_name}\`
 **Description / 설명:** ${description}
-**Preview / 미리보기:** ${input_preview}
+
+**Preview / 미리보기:**
+\`\`\`json
+${input_preview}
+\`\`\`
 
 To approve / 승인: \`yes ${request_id}\`
 To deny / 거부: \`no ${request_id}\``;

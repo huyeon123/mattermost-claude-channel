@@ -114,6 +114,16 @@ Mattermost 사용자의 메시지는 다음 형식으로 도착합니다:
     log(`posted event: post=${!!post}, user_id=${post?.user_id}, channel_id=${post?.channel_id}, message=${post?.message?.substring(0, 50)}`);
     if (!post || !post.user_id) { log('SKIP: no post or user_id'); return; }
 
+    // Check if this is a permission verdict from an admin (before any filters)
+    if (config.adminUsers.length > 0 && config.adminUsers.includes(post.user_id)) {
+      const verdict = parsePermissionVerdict(post.message);
+      if (verdict) {
+        log(`Permission verdict from admin ${post.user_id}: ${verdict.behavior} ${verdict.requestId}`);
+        await emitPermissionVerdict(mcp, verdict.requestId, verdict.behavior);
+        return;
+      }
+    }
+
     // Skip own messages
     if (post.user_id === botUserId) {
       log(`SKIP: own message (botUserId=${botUserId})`);
@@ -130,15 +140,6 @@ Mattermost 사용자의 메시지는 다음 형식으로 도착합니다:
     if (config.allowedUsers && config.allowedUsers.length > 0) {
       if (!config.allowedUsers.includes(post.user_id)) {
         log(`SKIP: user ${post.user_id} not in allowedUsers`);
-        return;
-      }
-    }
-
-    // Check if this is a permission verdict from an admin
-    if (config.adminUsers.length > 0 && config.adminUsers.includes(post.user_id)) {
-      const verdict = parsePermissionVerdict(post.message);
-      if (verdict) {
-        await emitPermissionVerdict(mcp, verdict.requestId, verdict.behavior);
         return;
       }
     }
