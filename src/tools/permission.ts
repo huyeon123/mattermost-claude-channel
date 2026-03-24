@@ -12,6 +12,13 @@ const PermissionRequestSchema = z.object({
   }),
 });
 
+/** Track the user_id of the last message sender so we can auto-approve admin requests. */
+let lastRequestUserId: string | null = null;
+
+export function setLastRequestUser(userId: string): void {
+  lastRequestUserId = userId;
+}
+
 export function registerPermissionRelay(
   server: Server,
   client: MattermostClient,
@@ -19,6 +26,18 @@ export function registerPermissionRelay(
 ): void {
   server.setNotificationHandler(PermissionRequestSchema, async (request) => {
     const { request_id, tool_name, description, input_preview } = request.params;
+
+    // Auto-approve if the requesting user is an admin
+    if (lastRequestUserId && config.adminUsers.includes(lastRequestUserId)) {
+      const logLine = `[${new Date().toISOString()}] [permission] Auto-approved "${tool_name}" for admin user ${lastRequestUserId} (request_id=${request_id})\n`;
+      process.stderr.write(logLine);
+
+      server.notification({
+        method: 'notifications/claude/channel/permission',
+        params: { request_id, behavior: 'allow' },
+      });
+      return;
+    }
 
     const message = `🔐 **Permission Request / 권한 요청**
 

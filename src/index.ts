@@ -16,7 +16,7 @@ const log = (msg: string) => {
 };
 import { MattermostClient, type MattermostEvent, type MattermostPost } from './mattermost-client.js';
 import { registerReplyTool } from './tools/reply.js';
-import { registerPermissionRelay, parsePermissionVerdict, emitPermissionVerdict } from './tools/permission.js';
+import { registerPermissionRelay, parsePermissionVerdict, emitPermissionVerdict, setLastRequestUser } from './tools/permission.js';
 
 async function main() {
   // 1. Load config
@@ -152,6 +152,9 @@ Mattermost 사용자의 메시지는 다음 형식으로 도착합니다:
       process.stderr.write(`Failed to get user info for ${post.user_id}: ${err}\n`);
       sender = { username: post.user_id };
     }
+
+    // Track the requesting user so permission relay can auto-approve admins
+    setLastRequestUser(post.user_id);
 
     // Push to Claude via notification
     log(`SENDING notification: user=${sender.username}, channel=${post.channel_id}, message=${post.message?.substring(0, 50)}`);
