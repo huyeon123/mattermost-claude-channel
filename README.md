@@ -110,8 +110,23 @@ Claude가 `reply` 도구를 사용하여 응답합니다:
 | `401 Unauthorized` | Bot 토큰 유효성 및 권한 확인 |
 | 메시지 미수신 | `ALLOWED_USERS`, `LISTEN_CHANNELS` 설정 확인. `LOG_LEVEL=debug`로 디버깅 |
 
+## 빠른 설치
+
+### 자동 설치 스크립트
+
+```bash
+git clone https://gitlab.gabia.com/productteam/ai/mcp/mattermost-claude-channel.git
+cd mattermost-claude-channel
+bash scripts/setup.sh
+```
+
+### AI 어시스턴트를 통한 설치
+
+[SETUP.md](SETUP.md) 파일을 AI에게 붙여넣으면 단계별로 설치를 진행합니다.
+
 ## 문서
 
+- [AI 설치 가이드](SETUP.md)
 - [아키텍처 및 동작 원리](docs/architecture.md)
 - [개발 가이드](docs/development.md)
 
