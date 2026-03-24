@@ -1,0 +1,16 @@
+node_modules/
+dist/
+
+# Local config with secrets
+.mcp.json
+.claude/
+
+# Logs
+*.log
+/tmp/mattermost-mcp.log
+
+# OS
+.DS_Store
+
+# OMC state
+.omc/

@@ -1,0 +1,22 @@
+{
+  "name": "mattermost-claude-channel",
+  "version": "0.1.0",
+  "description": "Claude Code Channel MCP server for Mattermost integration",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node --import tsx src/index.ts",
+    "dev": "node --watch --import tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4.0.0",
+    "typescript": "^5.3.0"
+  }
+}
